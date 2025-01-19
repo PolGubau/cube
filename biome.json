@@ -1,0 +1,14 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"extends": [
+		"@polgubau/configs/biome"
+	],
+	"files": {
+		"ignore": [
+			"**/node_modules/**",
+			"tailwind.config.ts",
+			"vite.config.ts",
+			"vite-env.d.ts"
+		]
+	}
+}
