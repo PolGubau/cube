@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useGame } from "../hooks/useGame";
-import { DiscardPile } from "./DiscardPile";
 import { DrawPile } from "./DrawPile";
 import { PlayerHand } from "./PlayerHand";
 import { SpecialEffectModal } from "./SpecialEffectModal";
+import { DiscardPile } from "./discardPile/DiscardPile";
 
 export const GameBoard: React.FC = () => {
   const {
