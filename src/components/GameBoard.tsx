@@ -66,14 +66,18 @@ export const GameBoard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-screen bg-neutral-200 p-8">
+    <div className="min-h-screen w-screen bg-neutral-200 p-8 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-200">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex justify-between">
           <div className="text-white">
             <h2 className="font-bold text-xl">Turno: {gameState.currentTurn}</h2>
             <p>Puntuación actual: {calculateScore()}</p>
           </div>
-          <button className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600" onClick={finishGame}>
+          <button
+            type="button"
+            className="cursor-pointer rounded-full border-2 border-red-500 px-4 py-2 text-red-900 transition-colors hover:bg-red-500/10"
+            onClick={finishGame}
+          >
             Terminar Juego
           </button>
         </div>
@@ -94,6 +98,7 @@ export const GameBoard: React.FC = () => {
         {gameState.drawnCard && (
           <div className="mt-4 flex justify-center">
             <button
+              type="button"
               className="mr-4 rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
               onClick={discardDrawnCard}
             >
@@ -105,7 +110,7 @@ export const GameBoard: React.FC = () => {
         {gameState.showSpecialEffect && gameState.specialEffectType && (
           <SpecialEffectModal
             effectType={gameState.specialEffectType}
-            onClose={() => {}}
+            onClose={() => null}
             onAction={handleSpecialEffectAction}
           />
         )}

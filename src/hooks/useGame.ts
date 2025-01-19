@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { db } from "../db/database";
 import { Card, GameState, SpecialEffectType } from "../types/cardTypes";
-import { createDeck } from "../utils/deckUtils";
+import { createDeck, shuffle } from "../utils/deckUtils";
 
 const initialGameState: GameState = {
   playerHand: [],
@@ -26,11 +26,10 @@ export const useGame = () => {
   const initializeGame = useCallback(async () => {
     const deck = createDeck();
     const playerHand = deck.splice(0, 4);
-    const randomIndexes = [0, 1];
-    for (const index of randomIndexes) {
-      playerHand[index].isRevealed = true;
-    }
-
+    const randomIndexes = shuffle([0, 1, 2, 3]).slice(0, 2);
+    playerHand.forEach((card, index) => {
+      card.isRevealed = randomIndexes.includes(index);
+    });
     const newGameState: GameState = {
       ...initialGameState,
       playerHand,
@@ -39,6 +38,16 @@ export const useGame = () => {
 
     setGameState(newGameState);
     await saveGame(newGameState);
+
+    // Ocultar las cartas después de 2 segundos
+    setTimeout(() => {
+      const hiddenState = {
+        ...newGameState,
+        playerHand: playerHand.map((card) => ({ ...card, isRevealed: false })),
+      };
+      setGameState(hiddenState);
+      saveGame(hiddenState);
+    }, 2000);
   }, [saveGame]);
 
   const drawCard = useCallback(async () => {
@@ -46,20 +55,25 @@ export const useGame = () => {
       return;
     }
 
-    const newGameState = { ...gameState };
-    // biome-ignore lint/style/noNonNullAssertion: <explanation>
-    const drawnCard = newGameState.deck.pop()!;
-    drawnCard.isRevealed = true;
-    newGameState.drawnCard = drawnCard;
+    const drawnCard = { ...gameState.deck[gameState.deck.length - 1], isRevealed: true };
+    const newDeck = [...gameState.deck.slice(0, -1)];
 
-    setGameState(newGameState);
-    await saveGame(newGameState);
-  }, [gameState, saveGame]);
+    setGameState((prev) => ({
+      ...prev,
+      deck: newDeck,
+      drawnCard,
+    }));
+  }, [gameState.deck, gameState.drawnCard]);
 
   const handleSpecialEffect = useCallback((card: Card) => {
     if (card.rank === "10") {
-      return "LOOK_ONE";
+      setGameState((prev) => ({
+        ...prev,
+        showSpecialEffect: true,
+        specialEffectType: "LOOK_ONE",
+      }));
     }
+
     if (card.rank === "J") {
       return "SWAP_TWO";
     }
@@ -75,11 +89,12 @@ export const useGame = () => {
     }
 
     const newGameState = { ...gameState };
-    const specialEffect = handleSpecialEffect(gameState.drawnCard);
+    const discardedCard = { ...gameState.drawnCard, isRevealed: true }; // Carta descartada siempre visible
 
-    newGameState.discardPile.push(gameState.drawnCard);
+    newGameState.discardPile.push(discardedCard);
     newGameState.drawnCard = null;
 
+    const specialEffect = handleSpecialEffect(discardedCard);
     if (specialEffect) {
       newGameState.showSpecialEffect = true;
       newGameState.specialEffectType = specialEffect;
@@ -96,8 +111,8 @@ export const useGame = () => {
       }
 
       const newGameState = { ...gameState };
-      const oldCard = newGameState.playerHand[handIndex];
-      newGameState.playerHand[handIndex] = gameState.drawnCard;
+      const oldCard = { ...newGameState.playerHand[handIndex], isRevealed: true }; // Carta descartada siempre visible
+      newGameState.playerHand[handIndex] = { ...gameState.drawnCard, isRevealed: false };
       newGameState.discardPile.push(oldCard);
       newGameState.drawnCard = null;
 
@@ -106,14 +121,23 @@ export const useGame = () => {
     },
     [gameState, saveGame],
   );
-
   const revealCard = useCallback(
     async (index: number) => {
       const newGameState = { ...gameState };
       newGameState.playerHand[index].isRevealed = true;
-
       setGameState(newGameState);
-      await saveGame(newGameState);
+
+      // Ocultar la carta después de 2 segundos
+      setTimeout(() => {
+        const hiddenState = {
+          ...newGameState,
+          playerHand: newGameState.playerHand.map((card, i) => (i === index ? { ...card, isRevealed: false } : card)),
+          showSpecialEffect: false,
+          specialEffectType: null,
+        };
+        setGameState(hiddenState);
+        saveGame(hiddenState);
+      }, 2000);
     },
     [gameState, saveGame],
   );

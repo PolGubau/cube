@@ -1,9 +1,10 @@
 import React from "react";
-import { SpecialEffectType } from "../types/types";
+import { SpecialEffectType } from "~/types/cardTypes";
 
 interface SpecialEffectModalProps {
   effectType: SpecialEffectType;
   onClose: () => void;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   onAction: (params: any) => void;
 }
 
@@ -27,10 +28,18 @@ export const SpecialEffectModal: React.FC<SpecialEffectModalProps> = ({ effectTy
         <h2 className="mb-4 font-bold text-xl">¡Efecto Especial!</h2>
         <p className="mb-4">{getEffectDescription()}</p>
         <div className="flex space-x-4">
-          <button className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600" onClick={() => onAction({})}>
+          <button
+            type="button"
+            className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            onClick={() => onAction({})}
+          >
             Aplicar Efecto
           </button>
-          <button className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600" onClick={onClose}>
+          <button
+            type="button"
+            className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+            onClick={onClose}
+          >
             Cancelar
           </button>
         </div>

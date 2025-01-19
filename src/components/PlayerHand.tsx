@@ -10,15 +10,17 @@ interface PlayerHandProps {
 
 export const PlayerHand: React.FC<PlayerHandProps> = ({ cards, onCardClick, selectedCardIndex }) => {
   return (
-    <div className="flex justify-center gap-4 p-4">
-      {cards.map((card, index) => (
-        <CardComponent
-          key={card.id}
-          card={card}
-          onClick={() => onCardClick(index)}
-          isSelected={selectedCardIndex === index}
-        />
-      ))}
+    <div className="perspective-distant">
+      <div className="transform-3d flex rotate-x-40 justify-center gap-4 p-4">
+        {cards.map((card, index) => (
+          <CardComponent
+            key={card.id}
+            card={card}
+            onClick={() => onCardClick(index)}
+            isSelected={selectedCardIndex === index}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -34,16 +34,16 @@ export const Card: React.FC<CardProps> = ({ card, onClick, isSelected, className
 
   if (!card.isRevealed) {
     return (
-      <div className={cardStyles} onClick={onClick}>
+      <button className={cardStyles} onClick={onClick} type="button">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-2xl text-white">?</div>
         </div>
-      </div>
+      </button>
     );
   }
 
   return (
-    <div className={cardStyles} onClick={onClick}>
+    <button className={cardStyles} onClick={onClick} type="button">
       <div className="absolute top-2 left-2">
         <div className="font-bold text-xl">{card.rank}</div>
         <div className="text-2xl">{getSuitSymbol(card.suit)}</div>
@@ -52,6 +52,6 @@ export const Card: React.FC<CardProps> = ({ card, onClick, isSelected, className
         <div className="font-bold text-xl">{card.rank}</div>
         <div className="text-2xl">{getSuitSymbol(card.suit)}</div>
       </div>
-    </div>
+    </button>
   );
 };
