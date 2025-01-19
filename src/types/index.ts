@@ -13,11 +13,16 @@ export type Data = {
 export type Card = {
   suit: keyof typeof symbols;
   value: number;
-  isHidden: boolean;
+  isVisible: boolean;
   isSpecial?: boolean;
 };
 export type Player = {
   id: number;
   hand: Card[];
-  visible: Card[];
+};
+
+export type History = {
+  player: Player;
+  card: Card;
+  id: number;
 };
