@@ -26,7 +26,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick, isSelected, className
 
   const cardStyles = `
     relative w-24 h-36 rounded-lg shadow-md rotate-x-0 border-b-6 p-2 ring transition-all select-none
-    ${card.isRevealed ? "bg-white" : "bg-blue-800 !text-black transform rotate-y-180 duration-500"}
+    ${card.isRevealed ? "bg-white" : "bg-stone-600 !text-black transform rotate-y-180 duration-500"}
     ${card.color === "red" ? "text-red-500" : "text-black"}
     ${isSelected ? "ring-2 ring-yellow-400" : ""}
     ${onClick ? "hover:-rotate-x-5 cursor-pointer hover:rotate-z-0 hover:border-b-2 hover:shadow-2xl hover:-translate-y-2 focus:-rotate-x-5 cursor-pointer focus:rotate-z-0 focus:border-b-2 focus:shadow-2xl focus:-translate-y-2" : ""}

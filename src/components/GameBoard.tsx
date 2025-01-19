@@ -66,34 +66,26 @@ export const GameBoard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen w-screen bg-neutral-200 p-8 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-200">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex justify-between">
-          <div className="text-white">
-            <h2 className="font-bold text-xl">Turno: {gameState.currentTurn}</h2>
-            <p>Puntuación actual: {calculateScore()}</p>
-          </div>
-          <button
-            type="button"
-            className="cursor-pointer rounded-full border-2 border-red-500 px-4 py-2 text-red-900 transition-colors hover:bg-red-500/10"
-            onClick={finishGame}
-          >
-            Terminar Juego
-          </button>
+    <div className="mx-auto flex h-screen max-w-6xl flex-col gap-8">
+      <header className="flex h-min justify-between border-b">
+        <div className="">
+          <h2 className="font-bold text-xl">Turno: {gameState.currentTurn}</h2>
+          <p>Puntuación actual: {calculateScore()}</p>
         </div>
+        <button
+          type="button"
+          className="cursor-pointer rounded-full px-4 py-2 text-red-900 transition-colors hover:bg-red-500/10 dark:text-red-300"
+          onClick={finishGame}
+        >
+          Terminar Juego
+        </button>
+      </header>
 
-        <div className="mb-8 flex items-center justify-between">
+      <div className="flex h-max grow items-start justify-between ">
+        <header className="flex w-full items-center justify-between gap-4">
           <DrawPile remainingCards={gameState.deck.length} drawnCard={gameState.drawnCard} onDraw={drawCard} />
           <DiscardPile cards={gameState.discardPile} />
-        </div>
-
-        <div className="rounded-lg bg-green-700 p-6">
-          <PlayerHand
-            cards={gameState.playerHand}
-            onCardClick={handleCardClick}
-            selectedCardIndex={gameState.selectedCardIndex}
-          />
-        </div>
+        </header>
 
         {gameState.drawnCard && (
           <div className="mt-4 flex justify-center">
@@ -106,15 +98,22 @@ export const GameBoard: React.FC = () => {
             </button>
           </div>
         )}
-
-        {gameState.showSpecialEffect && gameState.specialEffectType && (
-          <SpecialEffectModal
-            effectType={gameState.specialEffectType}
-            onClose={() => null}
-            onAction={handleSpecialEffectAction}
-          />
-        )}
       </div>
+      <div className="h-min rounded-t-4xl bg-neutral-500/20 p-6">
+        <PlayerHand
+          cards={gameState.playerHand}
+          onCardClick={handleCardClick}
+          selectedCardIndex={gameState.selectedCardIndex}
+        />
+      </div>
+
+      {gameState.showSpecialEffect && gameState.specialEffectType && (
+        <SpecialEffectModal
+          effectType={gameState.specialEffectType}
+          onClose={() => null}
+          onAction={handleSpecialEffectAction}
+        />
+      )}
     </div>
   );
 };
